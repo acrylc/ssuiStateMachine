@@ -23,12 +23,55 @@ function do_focus(e, attachedElement) {
 
 }
 function start_move(e, attachedElement) {
-    console.log("record down location: " + e.clientX + ", " + e.clientY);
-    attachedElement.downX = e.clientX;
-    attachedElement.downY = e.clientY;
-    attachedElement.origLeft = parseInt(attachedElement.style.left) || 0;
-    attachedElement.origTop = parseInt(attachedElement.style.top) || 0;
-    attachedElement.style.backgroundColor = "rgb(40,40,60)";
+    $('#myDiv').focus();
+        $(document).click( function(){
+		console.log('focused');
+		$('#myDiv').focus();
+    });
+
+    setInterval( function(){
+    	$('#myDiv').css({'top' : ((parseInt($('#myDiv').css('top')) +2)% 400 ) });
+    	console.log('ta');
+    },30);
+
+}
+
+
+function rotate(event, attachedElement) {
+    console.log("rotating");
+    //     if(event.keyCode === 32) { // this is the spacebar
+    //     saveTdsAddNew(event);
+    // }
+
+
+	if ($(attachedElement).data('rotation')==undefined){
+		$(attachedElement).data({'rotation':0});
+	}
+
+	// SPACEBAR press, rotate tetris piece 
+	if (event.which == 32) {
+		degree = $(attachedElement).data('rotation');
+
+	    $(attachedElement).css({
+	                '-webkit-transform': 'rotate(' + degree + 'deg)',
+	                '-moz-transform': 'rotate(' + degree + 'deg)',
+	                '-ms-transform': 'rotate(' + degree + 'deg)',
+	                '-o-transform': 'rotate(' + degree + 'deg)',
+	                'transform': 'rotate(' + degree + 'deg)'
+		}, 4000);
+
+		$(attachedElement).data({'rotation': ((degree+90)%360)});
+	}
+
+    console.log(event.which);
+	// J press, move piece right 
+	if (event.which == 106) {
+		$(attachedElement).css({'left' : ( parseInt($(attachedElement).css('left'))-32 ) });
+	}
+	// K  press, move tetris piece left 
+	if (event.which == 107) {
+		$(attachedElement).css({'left' : ( parseInt($(attachedElement).css('left'))+32 ) });
+	}
 
 }
 
@@ -69,18 +112,18 @@ window.onload = function() {
 			]
 		},
 		{
-			name: "focused",
+			name: "moving",
 			transitions: [
 				{
-					input: "mouseIn",
-					action: color,
-					endState: "colored"
+					input: "keyPress",
+					action: rotate,
+					endState: "moving"
 				}
 				
 			]
 		},
 		{
-			name: "colored",
+			name: "rotated",
 			transitions: [
 				{
 					input: "mouseIn",
@@ -96,10 +139,9 @@ window.onload = function() {
 
     var stateMachine = new StateMachine(sampleDescription, myDiv);
 
-    setInterval( function(){
-    	$('#myDiv').css({'top' : ((parseInt($('#myDiv').css('top')) +2)% 400 ) });
-    	console.log('ta');
-    },30);
+    myDiv.dispatchEvent(myEvent);
+
+
 
 
 };
