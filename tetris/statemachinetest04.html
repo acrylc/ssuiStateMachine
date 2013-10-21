@@ -1,0 +1,72 @@
+ <html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="../statemachine.js"></script>
+    <script src="statemachinetest04.js"></script>
+     <style type="text/css">
+	     @import url(http://fonts.googleapis.com/css?family=Lato:300);
+		body {
+			padding-top:100px;
+			color: rgb(40,40,60);
+			background-color: #f0f0f0;
+			font-family: Lato, sans-serif;
+			font-weight: 300; 
+			text-align:center;
+		}
+		*:focus{
+			outline: 0;
+		}
+		#myDiv{
+			outline: 0;
+			color: rgb(40,40,60);
+			border-top-style: none;
+			border-right-style: none;
+			border-bottom-style: none;
+			border-left-style: none;
+			margin: 0 auto;
+			font: Lato, sans-serif;
+			font-size: 2em;
+			transform: rotate(00deg);
+			-ms-transform: rotate(00deg); /* IE 9 */
+			-webkit-transform: rotate(00deg); /* Safari and Chrome */
+
+
+		}
+		.square{
+			position:absolute;
+			top:0px;
+			left:0px;
+			width: 30px;
+			height: 30px;
+			border-radius: 1px;
+			background-color: #D11F44;
+/*			box-shadow: 2px 2px 0px rgb(240,100,240);
+*/
+		}
+		#p1{
+			top:0px; left: 0px;
+		}
+		#p2{
+			top:32px; left: 0px;
+		}
+		#p3{
+			top:64px; left: 0px;
+		}
+		#p4{
+			top:64px; left: 32px;
+		}
+
+
+  </style>
+</head>
+<body>
+	<h1> Tetris </h1>
+	<p> This test file tests the timerTick30Ms and keyPress functionality </p>
+    <div id="myDiv" tabindex="-1" style="border-radius: 1px; width: 100px; height: 100px; position:absolute; top:0px;left: 500px;">
+		<div class='square' id='p1'></div>    	
+		<div class='square' id='p2'></div>
+		<div class='square' id='p3'></div>
+		<div class='square' id='p4'></div>
+    </div>
+</body>
+</html>
