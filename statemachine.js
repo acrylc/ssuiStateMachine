@@ -10,8 +10,8 @@ function StateMachine(description, elementToAttach) {
 		'stateMachine' : this
 	});
 
-	var domEvents = ['mousedown', 'mouseup', 'click', 'mousemove', 'mouseover', 'mouseout', 'keypress', 'customSetInterval', 'focus', 'focusout'];
-	var stateMachineEvents = ['mouseDown','mouseUp','click','mouseMove','mouseIn','mouseOut','keyPress', 'timerTick30Ms','focus','focusout'];
+	var domEvents = ['mousedown', 'mouseup', 'click', 'mousemove', 'mouseover', 'mouseout', 'keypress', 'customSetInterval', 'focus', 'focusout', 'stopTetrisPiece', 'appendTetrisPiece','appendNewTetrisPiece'];
+	var stateMachineEvents = ['mouseDown','mouseUp','click','mouseMove','mouseIn','mouseOut','keyPress', 'timerTick30Ms','focus','focusout', 'stopTetrisPiece', 'appendTetrisPiece','appendNewTetrisPiece'];
 	// var domEvents = ['mousedown'];
 	// var stateMachineEvents = ['mouseDown'];
 

@@ -2,6 +2,7 @@
 <head>
 	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="../statemachine.js"></script>
+    <script src="tetris.js"></script>
     <script src="statemachinetest04.js"></script>
      <style type="text/css">
 	     @import url(http://fonts.googleapis.com/css?family=Lato:300);
@@ -16,20 +17,20 @@
 		*:focus{
 			outline: 0;
 		}
-		#myDiv{
+		.myDiv{
 			outline: 0;
 			color: rgb(40,40,60);
 			border-top-style: none;
 			border-right-style: none;
 			border-bottom-style: none;
 			border-left-style: none;
-			margin: 0 auto;
 			font: Lato, sans-serif;
 			font-size: 2em;
 			transform: rotate(00deg);
 			-ms-transform: rotate(00deg); /* IE 9 */
 			-webkit-transform: rotate(00deg); /* Safari and Chrome */
-
+			border-radius: 1px; width: 62px; height: 94px; position:relative; top:0px;left: 160px;
+			position:absolute;
 
 		}
 		.square{
@@ -40,7 +41,10 @@
 			height: 30px;
 			border-radius: 1px;
 			background-color: #D11F44;
-/*			box-shadow: 2px 2px 0px rgb(240,100,240);
+			background-color: rgb(206,54,92);
+
+/*			background-color: #FFCE54;
+*//*			box-shadow: 2px 2px 0px rgb(240,100,240);
 */
 		}
 		#p1{
@@ -56,17 +60,33 @@
 			top:64px; left: 32px;
 		}
 
+		#tetrisContainer{
+			height: 480px;
+			width: 320px;
+			border: 3px solid rgb(40,40,60);
+			position:relative;
+			margin: 0 auto;
+		}
 
   </style>
 </head>
 <body>
 	<h1> Tetris </h1>
 	<p> This test file tests the timerTick30Ms and keyPress functionality </p>
-    <div id="myDiv" tabindex="-1" style="border-radius: 1px; width: 100px; height: 100px; position:absolute; top:0px;left: 500px;">
-		<div class='square' id='p1'></div>    	
-		<div class='square' id='p2'></div>
-		<div class='square' id='p3'></div>
-		<div class='square' id='p4'></div>
-    </div>
+   
+   	<div id='tetrisContainer'>
+<!-- 	    <div id="myDiv" tabindex="-1" style=">
+			<div class='square' id='p1'></div>    	
+			<div class='square' id='p2'></div>
+			<div class='square' id='p3'></div>
+			<div class='square' id='p4'></div>
+	    </div>
+	    <div id="myDiv2" tabindex="-1" style="border-radius: 1px; width: 62px; height: 94px; position:relative; top:0px;left: 160px;">
+			<div class='square' id='p1'></div>    	
+			<div class='square' id='p2'></div>
+			<div class='square' id='p3'></div>
+			<div class='square' id='p4'></div>
+	    </div>
+ -->	</div>
 </body>
 </html>

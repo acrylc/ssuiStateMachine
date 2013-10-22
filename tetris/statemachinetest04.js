@@ -4,45 +4,58 @@
 // This test file tests keypress
 // Click on the text input to put it in focus, every key press changes the div to a dfiferent color
 
-// Record the location where the div was clicked.
-function do_focus(e, attachedElement) {
-    console.log("clicked");
-    attachedElement.downX = e.clientX;
-    attachedElement.downY = e.clientY;
-    attachedElement.origLeft = parseInt(attachedElement.style.left) || 0;
-    attachedElement.origTop = parseInt(attachedElement.style.top) || 0;
 
-    $(attachedElement).data({'radius':'50'});
-    setInterval( function(){
-    	// console.log('throbbing');
-    	$(attachedElement).width(    $(attachedElement).data('radius') );
-    	$(attachedElement).height(    $(attachedElement).data('radius') );
-    	$(attachedElement).css(  {'border-radius' : $(attachedElement).data('radius')/2 } );
-    	$(attachedElement).data({ 'radius' :   ($(attachedElement).data('radius') + 1) % 100 } )  ;
-    }, 30);
+function start_move(e, attachedElement) {
+    $(attachedElement).focus();
+    $(document).click( function(){
+		$(attachedElement).focus();
+    });
+    var animation = setInterval( function(){
+    	if (tetris.checkMoveValidity( (parseInt($(attachedElement).css('top')) + parseInt($(attachedElement).css('height')) + 2),parseInt($(attachedElement).css('left'))  , attachedElement ) == true){
+    		$(attachedElement).css({'top' : ((parseInt($(attachedElement).css('top')) + 2) ) });
+    	} else {
+			var myEvent = new CustomEvent("stopTetrisPiece");
+			$(attachedElement)[0].dispatchEvent(myEvent);
+			stopAnimation();
+    	} 
+    },30);
+    var stopAnimation = function(){
+    	clearInterval(animation);
+    }
+}
+
+function stop(e, attachedElement){
+	console.log('stopped!');
+
+	for (var i=0;i<$(attachedElement).children().length;i++){
+		console.log($($(attachedElement).children()[i]).css('top'));
+		var y = parseInt($(attachedElement).css('top'))+ parseInt($($(attachedElement).children()[i]).css('top'));
+		var x = parseInt($(attachedElement).css('left'))+ parseInt($($(attachedElement).children()[i]).css('left'));
+		y = Math.floor(y/32);
+		x = Math.floor(x/32);
+		console.log(y);
+		console.log(x);
+		tetris.grid[y][x] = 1;
+	}
+
+	var myEvent = new CustomEvent("appendTetrisPiece", {
+	detail: {
+		oldPiece: attachedElement
+	}});
+	var div = $('#tetrisContainer')[0];
+	console.log(div);
+	div.dispatchEvent(myEvent);
 
 }
-function start_move(e, attachedElement) {
-    $('#myDiv').focus();
-        $(document).click( function(){
-		console.log('focused');
-		$('#myDiv').focus();
-    });
 
-    setInterval( function(){
-    	$('#myDiv').css({'top' : ((parseInt($('#myDiv').css('top')) +2)% 400 ) });
-    	console.log('ta');
-    },30);
-
+function addNewTetrisPiece(e, attachedElement){
+	console.log('here');
+	console.log(e.detail);
+	tetris.appendTetrisPiece();
 }
 
 
 function rotate(event, attachedElement) {
-    console.log("rotating");
-    //     if(event.keyCode === 32) { // this is the spacebar
-    //     saveTdsAddNew(event);
-    // }
-
 
 	if ($(attachedElement).data('rotation')==undefined){
 		$(attachedElement).data({'rotation':0});
@@ -51,96 +64,101 @@ function rotate(event, attachedElement) {
 	// SPACEBAR press, rotate tetris piece 
 	if (event.which == 32) {
 		degree = $(attachedElement).data('rotation');
+		var t = $(attachedElement).css('top');
+		console.log('top was ' + t);
+		var l = $(attachedElement).css('left');
+				console.log('left was ' + l);
 
 	    $(attachedElement).css({
-	                '-webkit-transform': 'rotate(' + degree + 'deg)',
-	                '-moz-transform': 'rotate(' + degree + 'deg)',
-	                '-ms-transform': 'rotate(' + degree + 'deg)',
-	                '-o-transform': 'rotate(' + degree + 'deg)',
-	                'transform': 'rotate(' + degree + 'deg)'
-		}, 4000);
+
+	                '-webkit-transform': 'rotate(' + degree + 'deg)  ',
+
+	                	    	    	'-webkit-transform-origin':' 0% 0%;',
+
+   	    	    	'-moz-transform-origin':' 0% 0%;',
+	                '-moz-transform': 'rotate(' + degree + 'deg) ',
+   	    	    	'-ms-transform-origin':' 0% 00%;',
+	                '-ms-transform': 'rotate(' + degree + 'deg)  ',
+   	    	    	'-o-transform-origin':' 0% 00%;',
+	                '-o-transform': 'rotate(' + degree + 'deg) ',
+	    	    	'transform-origin':' 0% 0%;',
+	                'transform': 'rotate(' + degree + 'deg) '
+		});
 
 		$(attachedElement).data({'rotation': ((degree+90)%360)});
+		// $(attachedElement).css({'top': parseInt(t)});
+		// console.log('top is ' + $(attachedElement).css('top'));
+		// $(attachedElement).css({'left': (parseInt(l)+2)});
+		// 		console.log('left is ' + $(attachedElement).css('left'));
+
 	}
 
-    console.log(event.which);
 	// J press, move piece right 
+	var stepSize = 32;
 	if (event.which == 106) {
-		$(attachedElement).css({'left' : ( parseInt($(attachedElement).css('left'))-32 ) });
+    		if ( ( parseInt($(attachedElement).css('left'))-stepSize ) <= 0 ){
+    			$(attachedElement).css({'left' : (parseInt( $('#tetrisContainer').css('width')))-stepSize}); 
+    		} else 
+			$(attachedElement).css({'left' : ( parseInt($(attachedElement).css('left'))-stepSize ) });
 	}
 	// K  press, move tetris piece left 
 	if (event.which == 107) {
-		$(attachedElement).css({'left' : ( parseInt($(attachedElement).css('left'))+32 ) });
+			$(attachedElement).css({'left' : (( parseInt($(attachedElement).css('left'))+stepSize )% (parseInt( $('#tetrisContainer').css('width')))) });
 	}
 
 }
 
-// When the div is released, make its background color red again.
-function color(e, attachedElement) {
-	var r = Math.floor(Math.random()*255);
-	var g = Math.floor(Math.random()*255);
-	var b = Math.floor(Math.random()*255);
-	console.log(attachedElement);
-    // attachedElement.style.backgroundColor = "blue";
-    attachedElement.style.backgroundColor = "rgb("+r+","+g+","+b+")";
-}
 
 
+
+var tetris = new App.Tetris(32, '#tetrisContainer');
 
 // Provides the state machine description and creates a new state machine attached to myDiv
 window.onload = function() {
-    var myDiv = document.getElementById("myDiv");
+    // var myDiv = document.getElementById("myDiv");
 	
-	var myEvent = new CustomEvent("customSetInterval", {
+	var myEvent = new CustomEvent("appendTetrisPiece", {
 	detail: {
-		username: "davidwalsh"
-	}
-});
+		oldPiece: ''
+	}});
+	var div = $('#tetrisContainer')[0];
+	console.log(div);
 
-// Trigger it!
+    var myContainer = $('#tetrisContainer')[0];
 
-	var sampleDescription = {
+	var tetrisDescription = {
 		states: [
 		{
 			name: "start",
 			transitions: [
 				{
-					input: "timerTick30Ms", 
-					action: start_move,
-					endState: "moving"
+					input: "appendTetrisPiece", 
+					action: tetris.appendTetrisPiece,
+					endState: "waiting"
 				},
 			]
 		},
 		{
-			name: "moving",
+			name: "waiting",
 			transitions: [
 				{
-					input: "keyPress",
-					action: rotate,
-					endState: "moving"
-				}
-				
-			]
-		},
-		{
-			name: "rotated",
-			transitions: [
+					input: "appendTetrisPiece",
+					action: addNewTetrisPiece,
+					endState: "waiting"
+				}, 
 				{
-					input: "mouseIn",
-					action: color,
-					endState: "colored"
+					input: "stopTetrisPiece", 
+					action: stop,
+					endState: "stop"
 				}
-				
 			]
-		},
-
-	]
+		}
+		]
 	};
 
-    var stateMachine = new StateMachine(sampleDescription, myDiv);
+	var stateMachine = new StateMachine(tetrisDescription, myContainer);
 
-    myDiv.dispatchEvent(myEvent);
-
+	myContainer.dispatchEvent(myEvent);
 
 
 
